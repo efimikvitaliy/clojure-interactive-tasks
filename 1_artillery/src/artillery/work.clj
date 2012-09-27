@@ -15,11 +15,11 @@
 ;;; It always returns PI / 2 (missile is launched straight up).
 ;;; You can either calculate answer or find it by trying and adjusting different angles.
 (defn plane-static-solution []
-  (* 0.5 Math/PI))
+  ( - Math/PI   (  * (Math/atan ( / ( -   (Math/sqrt 556) 16) 10 ) ) 2)))
 
 ;;; Here's a function that will show you animation with plane you launching missiles.
 ;;; You need to pass your solution (function name) to this function and run this file.
-(plane-static plane-static-solution)
+;(plane-static plane-static-solution)
 
 
 
@@ -34,8 +34,8 @@
 ;;; trg-x trg-y - target's coordinates.
 ;;; Run and see how it launches missile now and then fix it to hit the plane.
 (defn plane-dynamic-solution [pl-x pl-y trg-x trg-y]
-  (Math/atan2 (- trg-y pl-y) (- trg-x pl-x)))
-
+  ( * 2 ( Math/atan ( / ( -  ( Math/sqrt (+ (* 16 (* ( - tr-x p-x) ( - tr-x p-x)))  (* 12 (* ( - tr-y p-y) ( - tr-y p-y)))))  ( * 4 ( - tr-x p-x))  ) (* 6 ( - tr-y p-y))  ))) )
+ 
 ;;; To run program uncomment - remove ';' symbol before '(plane-dynamic ...)'
 ;;; And also comment previous task - add ';' symbol before '(plane-static ...)'
 ; (plane-dynamic plane-dynamic-solution)
@@ -51,18 +51,25 @@
 ;;; Your position x = 0, y = 0.
 ;;; Missile speed stays the same as before.
 ;;; You need to write function that takes no arguments and returns angle to launch missile at.
+ (defn ufo-static-solution [] 
+  ( Math/atan ( / ( +  20  ( Math/sqrt 60)  ) 10     )  )   )
 
 ;;; Now you don't have template function, so write one yourself.
 ;;; Hint: try to pass random angle at first e.g. 0.5 and see how it works.
 ;;; To run program uncomment it (and comment others) and pass your function to it.
-; (ufo-static YOUR_SOLUTION)
+; (ufo-static ufo-static-solution)
+
+(defn ufo-dynamic-solution [pl-x pl-y trg-x trg-y  ]       ( / ( - (  Math/acos (   Math/max   (  / ( - ( + ( * 1000 ( - trg-y pl-y)) (* ( - trg-x pl-x) ( - trg-x pl-x)))) 
+( * 1000 ( Math/sqrt ( + ( * ( - trg-y pl-y) ( - trg-y pl-y)) ( * ( - trg-x pl-x) ( - trg-x pl-x))))))  -1.0  )  )  ( Math/asin ( / ( - trg-x pl-x)
+ ( Math/sqrt ( + ( * ( - trg-y pl-y) ( - trg-y pl-y)) ( * ( - trg-x pl-x) ( - trg-x pl-x)) ))))) 2)      )
 
 
 
 ;;; Same UFO, but now it appears at random position (same as plane-dynamic).
 ;;; Your position is also changing.
 ;;; You need to write function that takes 4 arguments: your position (x, y)  and UFO's position (x, y).
-; (ufo-dynamic YOUR_SOLUTION)
+(ufo-dynamic ufo-dynamic-solution)
+
 
 
 
