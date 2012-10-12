@@ -161,7 +161,7 @@
 
 
 ;;; Uncomment and substitute your solution
- (run-many-apples third-solution)
+; (run-many-apples third-solution)
 
 
 
@@ -169,6 +169,9 @@
 ;;; Your function now takes third argument - set of walls.
 ;;; Each wall is a cell that snake is not allowed to  move to.
 ;;; Wall is a vector of x and y.
+(defn four-solution [s i z]  (third-solution (vec (concat  s  z)) i ))
+
+
 
 ;;; Uncomment and substitute your solution
-; (run-with-walls YOUR_SOLUTION_HERE)
+ (run-with-walls four-solution)
