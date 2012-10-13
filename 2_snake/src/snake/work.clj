@@ -99,6 +99,13 @@
 ;;; Each apple in the set is a vector of x and y.
 ;;; E.g. you can try to reach nearest apple to the snake.
 
+(defn f3 [x]  
+(if (< (first x) 0) [40 (second x)]
+(if (> (first x) 40)  [0 (second x)] 
+(if (< (second x) 0)  [(first x) 30]
+(if (> (second x) 30)  [(first x) 0]  x ))))) 
+
+
 (defn tfn2 [i mas s] (let [ m
                           (set (remove #(contains? (set s) %) 
                             (reduce #( conj                      ( conj 
@@ -110,7 +117,7 @@
                                        (f3 [(first  %2) (+  (second %2) 1) ]))
                                     mas mas)))]
                       (if (contains? (set s) (first mas)) 10000
-  (if (some m i) (some m i) (if (= m mas) 10000  (tfn2 i m s) )))  ))
+  (if (some m i) 1 (if (= m mas) 10000  (+ (tfn2 i m s) 1))))  ))
 
 
 
@@ -119,45 +126,13 @@
                                   b (tfn2 (set i) #{  (f3 [(first (first s)) (- (second (first s)) 1) ]) }   s)
                                   c (tfn2 (set i) #{  (f3 [(+ (first (first s)) 1) (second (first s)) ]) }   s) 
                                   d (tfn2 (set i) #{  (f3 [(first (first s)) (+ (second (first s)) 1) ]) }   s) 
-                                  xxa (if (not= a 10000)
-                                      (Math/abs (- (- (- (first (first s)) 1) (first a)))) 1000)
-                                  yxa (if (not= a 10000) 
-                                      (Math/abs (- (second (first s)) (second a))) 1000)
-                                  xxb (if (not= b 10000)
-                                      (Math/abs (- (first (first s)) (first b))) 1000)
-                                  yxb (if (not= b 10000)
-                                      (Math/abs (- (- (second (first s)) 1) (second b))) 1000)
-                                  xxc (if (not= c 10000)
-                                      (Math/abs (- (+ (first (first s)) 1) (first c))) 1000)
-                                  yxc (if (not= c 10000)
-                                      (Math/abs (- (second (first s))  (second c))) 1000)
-                                  xxd (if (not= d 10000)
-                                      (Math/abs (- (first (first s)) (first d))) 1000)
-                                  yxd (if (not= d 10000) 
-                                      (Math/abs (- (+ (second (first s)) 1) (second d))) 1000)
-                                  xa (if (not= a 10000)
-                                     (+ (min xxa (Math/abs(- 40 xxa)))
-                                        (min yxa (Math/abs(- 30 yxa))))
-                                        1000)    
-                                  xb (if (not= b 10000)
-                                     (+ (min xxb (Math/abs(- 40 xxb)))
-                                        (min yxb (Math/abs(- 30 yxb))))
-                                        1000)
-                                  xc (if (not= c 10000)
-                                      (+ (min xxc (Math/abs(- 40 xxc)))
-                                         (min yxc (Math/abs(- 30 yxc))))
-                                        1000)
-                                  xd (if (not= d 10000)
-                                      (+ (min xxd (Math/abs(- 40 xxd)))
-                                         (min yxd (Math/abs(- 30 yxd))))
-                                       1000)
-                                  mi (reduce min [xa xb xc xd])
+
+                                  mi (reduce min [a b c d])
 
                                   ]
-( if ( = xa mi )  :left  
-  ( if (= xb mi) :up  
-    (if (= xc mi)  :right :down )))))
-
+( if ( = a mi )  :left  
+  ( if (= b mi) :up  
+    (if (= c mi)  :right :down )))))
 
 
 ;;; Uncomment and substitute your solution
