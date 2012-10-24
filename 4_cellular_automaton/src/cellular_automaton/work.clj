@@ -29,30 +29,18 @@
     (draw-cell rect cell)))
 
 (defn neigh [x y] (let [ 
-                        a (if (contains? @live [(inc x) y]) 1 0 )
-                        b (if (contains? @live [x (inc y)]) 1 0 )
-                        c (if (contains? @live [(dec x) y]) 1 0 )
-                        d (if (contains? @live [x (dec y)]) 1 0 )
-                        a1 (if (contains? @live [(inc x) (inc y)]) 1 0 )
-                        b1 (if (contains? @live [(dec x) (inc y)]) 1 0 )
-                        c1 (if (contains? @live [(dec x) (dec y)]) 1 0 )
-                        d1 (if (contains? @live [(inc x) (dec y)]) 1 0 )
-
+                        l [[(inc x) y] [x (inc y)] [(dec x) y] [x (dec y)] [(inc x) (inc y)] [(dec x) (inc y)] [(dec x) (dec y)] [(inc x) (dec y)]]
                         ]  
-                      (reduce + 0 [a b c d a1 b1 c1 d1])))
+                          (reduce + 0 (map #(if (contains? @live %) 1 0) l  ))))
 
 
-(defn update-live [lcells]
-(loop [x 0]
-    (when (<= x 40)
-(loop [y 0]
-	  (when (<= y 30)
-	    (if (= (neigh x y) 3) (swap! new-live conj [x y])  (if (and (= (neigh x y) 2) (contains? @live [x y]))  (swap! new-live conj [x y]) ))
-	    (recur (+ y 1))
-        ))
-	    (recur (+ x 1))
-        ))
-)
+(defn live? [x]  (if (= (neigh (first x) (second x)) 3) true
+                   (if (and (= (neigh (first x) (second x)) 2) (contains? @live [(first x) (second x)])) true false)))
+
+(defn get-new-live []
+  (filter live? (for [x (range 41) y (range 41)] [x y])))
+
+
 
 (defn draw []
 
@@ -62,16 +50,16 @@
         y    (random (height))]     
 	(background 200)
 	(draw-live @live)
- 	(update-live @live)
-	(reset! live @new-live)
-	(reset! new-live #{})
+    (reset! live (set (get-new-live)) )
     ))       
 
 (defsketch example                  
   :title "Planer"  
   :setup setup                      
   :draw draw                        
-  :size [800 600])                  
+  :size [800 600])    
+
+          
 
 ;;; Your task is to implement cellular automaton.
 ;;; The most famous example of cellular automaton is Conway's Game of Life.
