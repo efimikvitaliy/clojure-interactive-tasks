@@ -10,9 +10,13 @@
 ;;; Position (snake's or apple's) is a vector of 2 elements: x and y.
 ;;; In this task snake is not growing after it ate an apple so there is no danger of snake hitting itself.
 ;;; Note: upper left corner cell is (0, 0).
+(defn first-solution [s a] (let [sx (first s) sy (second s) ax (first a) ay (second a)  ]
+(if (not= sx ax )   (if (< sx ax) :right :left   )     (if (< sy ay ) :down :up )    )))
+
+
 
 ;;; Uncomment and substitute your solution
-; (run-not-grow YOUR_SOLUTION_HERE)
+; (run-not-grow first-solution)
 
 
 
@@ -25,8 +29,68 @@
 ;;; Note that you cannot change direction to the opposite in 1 move: snake will hit it's tail if length is 2 or more.
 ;;; Wait, you can change direction but snake will die :\
 
+
+(defn f3 [x]  
+(if (< (first x) 0) [40 (second x)]
+(if (> (first x) 40)  [0 (second x)] 
+(if (< (second x) 0)  [(first x) 30]
+(if (> (second x) 30)  [(first x) 0]  x )))))  
+
+
+(defn fn2 [i mas s] (let [ m
+                          (set (remove #(contains? (set s) %) 
+                            (reduce #( conj                      ( conj 
+                                     ( conj 
+                                     ( conj % 
+                                       (f3 [(-  (first %2) 1) (second %2) ]) )
+                                       (f3 [(first  %2) (- (second %2) 1) ]))
+                                       (f3 [(+ (first  %2) 1) (second  %2) ]))
+                                       (f3 [(first  %2) (+  (second %2) 1) ]))
+                                    mas mas)))]
+                      (if (contains? (set s) (first mas)) 1000
+  (if (contains? m i) 1 (if (= m mas) 10000  (fn2 i m s) )))  ))
+
+
+
+(defn second-solution [s i] (let [
+                                  a (fn2 i #{  (f3 [(- (first (first s)) 1) (second (first s)) ]) }   s)         
+                                  b (fn2 i #{  (f3 [(first (first s)) (- (second (first s)) 1) ]) }   s)
+                                  c (fn2 i #{  (f3 [(+ (first (first s)) 1) (second (first s)) ]) }   s) 
+                                  d (fn2 i #{  (f3 [(first (first s)) (+ (second (first s)) 1) ]) }   s) 
+                                  xxa (Math/abs (- (- (- (first (first s)) 1) (first i))))
+                                  yxa (Math/abs (- (second (first s)) (second i)))
+                                  xxb (Math/abs (- (first (first s)) (first i)))
+                                  yxb (Math/abs (- (- (second (first s)) 1) (second i)))
+                                  xxc (Math/abs (- (+ (first (first s)) 1) (first i)))
+                                  yxc (Math/abs (- (second (first s))  (second i)))
+                                  xxd (Math/abs (- (first (first s)) (first i)))
+                                  yxd (Math/abs (- (+ (second (first s)) 1) (second i)))
+                                  xa (if (= a 1)
+                                     (+ (min xxa (Math/abs(- 40 xxa)))
+                                        (min yxa (Math/abs(- 30 yxa))))
+                                        1000)    
+                                  xb (if (= b 1)
+                                     (+ (min xxb (Math/abs(- 40 xxb)))
+                                        (min yxb (Math/abs(- 30 yxb))))
+                                        1000)
+                                  xc (if (= c 1)
+                                      (+ (min xxc (Math/abs(- 40 xxc)))
+                                         (min yxc (Math/abs(- 30 yxc))))
+                                        1000)
+                                  xd (if (= d 1)
+                                      (+ (min xxd (Math/abs(- 40 xxd)))
+                                         (min yxd (Math/abs(- 30 yxd))))
+                                       1000)
+                                  mi (reduce min [xa xb xc xd])
+
+                                  ]
+( if ( = xa mi )  :left  
+  ( if (= xb mi) :up  
+    (if (= xc mi)  :right :down )))))
+
+
 ;;; Uncomment and substitute your solution
-; (run-grow YOUR_SOLUTION_HERE)
+; (run-grow second-solution)
 
 
 
@@ -35,8 +99,44 @@
 ;;; Each apple in the set is a vector of x and y.
 ;;; E.g. you can try to reach nearest apple to the snake.
 
+(defn f3 [x]  
+(if (< (first x) 0) [40 (second x)]
+(if (> (first x) 40)  [0 (second x)] 
+(if (< (second x) 0)  [(first x) 30]
+(if (> (second x) 30)  [(first x) 0]  x ))))) 
+
+
+(defn tfn2 [i mas s] (let [ m
+                          (set (remove #(contains? (set s) %) 
+                            (reduce #( conj                      ( conj 
+                                     ( conj 
+                                     ( conj % 
+                                       (f3 [(-  (first %2) 1) (second %2) ]) )
+                                       (f3 [(first  %2) (- (second %2) 1) ]))
+                                       (f3 [(+ (first  %2) 1) (second  %2) ]))
+                                       (f3 [(first  %2) (+  (second %2) 1) ]))
+                                    mas mas)))]
+                      (if (contains? (set s) (first mas)) 10000
+  (if (some m i) 1 (if (= m mas) 10000  (+ (tfn2 i m s) 1))))  ))
+
+
+
+(defn third-solution [s i] (let [
+                                  a (tfn2 (set i) #{  (f3 [(- (first (first s)) 1) (second (first s)) ]) }   s)         
+                                  b (tfn2 (set i) #{  (f3 [(first (first s)) (- (second (first s)) 1) ]) }   s)
+                                  c (tfn2 (set i) #{  (f3 [(+ (first (first s)) 1) (second (first s)) ]) }   s) 
+                                  d (tfn2 (set i) #{  (f3 [(first (first s)) (+ (second (first s)) 1) ]) }   s) 
+
+                                  mi (reduce min [a b c d])
+
+                                  ]
+( if ( = a mi )  :left  
+  ( if (= b mi) :up  
+    (if (= c mi)  :right :down )))))
+
+
 ;;; Uncomment and substitute your solution
-; (run-many-apples YOUR_SOLUTION_HERE)
+; (run-many-apples third-solution)
 
 
 
@@ -44,6 +144,9 @@
 ;;; Your function now takes third argument - set of walls.
 ;;; Each wall is a cell that snake is not allowed to  move to.
 ;;; Wall is a vector of x and y.
+(defn four-solution [s i z]  (third-solution (vec (concat  s  z)) i ))
+
+
 
 ;;; Uncomment and substitute your solution
-; (run-with-walls YOUR_SOLUTION_HERE)
+ (run-with-walls four-solution)
