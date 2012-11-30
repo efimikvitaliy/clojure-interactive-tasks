@@ -44,7 +44,7 @@
 
 ;;; Implement ^ (pow function) for church numerals.
 
-(def pow :YOUR_IMPLEMENTATION_HERE)
+(def pow (fn [a] (fn [b] (fn [f] (fn [x] (((b a) f) x))))))
 
 (to-normal-num ((pow church-2) church-5)) ; must return 32
 
@@ -54,7 +54,11 @@
 
 ;;; Implement dec function for church numerals.
 
-(def dec :YOUR_IMPLEMENTATION_HERE)
+(def chinc (fn [n] (fn [f] (fn [x] (f ((n  f) x)) ) ) ))
+
+(def next-pair (fn [p] [(chinc (first p)) (first p)]))
+
+(def dec (fn [a]  (fn [f] (fn [x] (((second ((a  next-pair) [(to-church-num 0) (to-church-num 0)])) f) x)) )))
 
 (to-normal-num (dec church-5)) ; must return 4
 
