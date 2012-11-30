@@ -34,7 +34,7 @@
 
 ;;; Implement * (multiplication) for church numerals
 
-(def mult :YOUR_IMPLEMENTATION_HERE)
+(def mult (fn [a] (fn [b] (fn [f] (fn [x] ((a (b f))  x))))))
 
 (to-normal-num ((mult church-2) church-5)) ; must return 10
 
