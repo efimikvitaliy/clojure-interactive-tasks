@@ -24,7 +24,7 @@
 
 ;;; Implement + (plus) for church numerals.
 
-(def plus :YOUR_IMPLEMENTATION_HERE)
+(def plus (fn [a] (fn [b] (fn [f] (fn [x] ((a f) ((b f) x)))))))
 
 (to-normal-num ((plus church-2) church-2)) ; must return 4
 
