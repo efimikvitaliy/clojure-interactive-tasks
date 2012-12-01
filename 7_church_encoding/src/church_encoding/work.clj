@@ -54,12 +54,26 @@
 
 ;;; Implement dec function for church numerals.
 
+
+(def pair (fn [a] (fn [b] (fn [z] ((z a) b)))))
+
+(def first (fn [a] (fn [b] a)))
+(def second (fn [a] (fn [b] b)))
+
+
+(def church-5 (to-church-num 5)) 
+
 (def chinc (fn [n] (fn [f] (fn [x] (f ((n  f) x)) ) ) ))
 
-(def next-pair (fn [p] [(chinc (first p)) (first p)]))
+(def next-pair (fn [p] ((pair (chinc ( p first))) ( p first))))
 
-(def dec (fn [a]  (fn [f] (fn [x] (((second ((a  next-pair) [(to-church-num 0) (to-church-num 0)])) f) x)) )))
-
+(def dec 
+  (fn [a]  
+    (fn [f] 
+      (fn [x] (((((a  next-pair) 
+                  ((pair (to-church-num 0))
+                          (to-church-num 0)) ) 
+                 second) f) x)) )))
 (to-normal-num (dec church-5)) ; must return 4
 
 (test-dec dec) ; test your solution
