@@ -27,8 +27,30 @@
 ;;; (derivative '(+ x x)) => 2 or '(+ 1 1)
 ;;; (derivative '(sin (* 2 x))) => (* 2 (cos (* 2 x))) or it's equilavent.
 
-(defn derivative [expr]
-  expr)
+(defn derivative [exp]
+  (let [expr (if (coll? exp)(vec exp)exp)]
+  (cond
+   (not (coll? expr)) (if (= expr 'x) 1 0)
+   (= (first expr) '+ ) (seq ['+  
+                         (derivative (second expr))
+                          (derivative (last expr))])
+   (= (first expr) '*) (seq ['+  
+                          (seq ['* (second expr)
+                          (derivative (last expr))  ]) 
+                          (seq ['* (derivative (second expr))
+                          (last expr) ] ) ])
+   (= (first expr) '/)  (seq ['/  
+                              (seq ['- 
+                                    (seq ['* (derivative (second expr)) (last expr)])
+                                    (seq ['* (second expr) (derivative (last expr))])])
+                              (seq ['* (last expr) (last expr)])])
+   (= (first expr) 'sin) (seq ['* (derivative (last expr)) 
+                                   (seq ['cos (last expr)])  ])
+   (= (first expr) 'cos) (seq ['* -1 (seq ['* (derivative (last expr)) 
+                                   (seq ['sin (last expr)])  ])])
+   (= (first expr) 'log) (seq ['* (derivative (last expr)) (seq ['/ 1 (last expr)])])
+
+   )))
 
 
 ;;; Tests.
